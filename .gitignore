@@ -22,3 +22,44 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# Eclipse
+.settings/
+.classpath
+.project
+
+# runtime / build
+/storage/
+/data/
+target/
+
+# macOS
+.DS_Store
+
+# local overrides (secrets, local paths)
+application-local.yml
+.env
+.env.local
+
+# YOLO (пока пользуемся вебом Roboflow — папку и артефакты не коммитим)
+/yolo/
+
+# Локальные/вспомогательные исходники (если появятся)
+/sources/
+
+# runs/detect (YOLO inference output, часто локальные пути)
+/runs/
+
+# Документация и ТЗ (в репозитории только код для запуска)
+CONTRACT_CLAUSES.md
+TZ_DOCUMENT.md
+TZ_DOCUMENT.docx
+/docs/
+/API.md

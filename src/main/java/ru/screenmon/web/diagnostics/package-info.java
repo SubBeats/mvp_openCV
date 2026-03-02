@@ -1,0 +1,14 @@
+/**
+ * Диагностические эндпоинты.
+ *
+ * <p><b>Структура:</b> вспомогательные API для проверки работы OpenCV и просмотра текущих порогов CV без загрузки кадров в основной поток.</p>
+ *
+ * <p><b>Эндпоинты (префикс {@code /api/demo}):</b></p>
+ * <ul>
+ *   <li>{@code GET /api/demo/opencv} — статус загрузки OpenCV.</li>
+ *   <li>{@code GET /api/demo/cv-settings} — текущие значения всех параметров {@code app.cv.*} (чёрный экран, фриз, битые блоки и т.д.).</li>
+ *   <li>{@code GET /api/demo/analyze-sample} — разбор тестового чёрного кадра.</li>
+ *   <li>{@code POST /api/demo/analyze} — разбор произвольного изображения (параметр {@code file}); возвращает meanY, var, isBlack и т.д.</li>
+ * </ul>
+ */
+package ru.screenmon.web.diagnostics;

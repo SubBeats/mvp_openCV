@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<!-- Страница «Демо-анализ»: загрузка одного изображения, отправка POST /api/demo/analyze, отображение яркости/дисперсии и флага «чёрный экран». Без сохранения в БД. -->
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Демо-анализ — Screen Monitor</title>
+  <link rel="stylesheet" href="/css/screen-monitor.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sidebar-logo">Screen Monitor</div>
+      <nav class="sidebar-nav">
+        <a href="/">Статус сети</a>
+        <a href="/upload.html">Загрузка кадра</a>
+        <a href="/demo.html" class="active">Демо-анализ</a>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="/swagger-ui.html" target="_blank">API (Swagger)</a>
+      </div>
+    </aside>
+    <main class="main">
+      <h1 class="page-title">Демо-анализ</h1>
+      <p class="metric-label" style="margin-bottom:1rem;">Проверка без сохранения: только яркость и чёрный экран (OpenCV). Без нейросети и без записи в БД. Для полного анализа с детекцией глитчей и боксами используйте <a href="/upload.html">Загрузка кадра</a>.</p>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-header">Загрузить изображение</div>
+          <div class="card-body">
+            <div class="drop-zone" id="demo-drop">
+              <input type="file" id="demo-file" accept="image/*">
+              <span id="demo-drop-text">Перетащите файл сюда или нажмите для выбора</span>
+            </div>
+            <button type="button" class="btn btn-primary" id="demo-analyze-btn" style="margin-top:1rem;" disabled>Анализировать</button>
+            <div class="preview-area" id="demo-preview">Выберите изображение</div>
+          </div>
+        </div>
+        <div class="right-panel">
+          <div class="card">
+            <div class="card-header">Результат анализа</div>
+            <div class="card-body" id="demo-result">
+              <div class="empty-state" id="demo-result-empty">Результат появится после анализа.</div>
+              <div id="demo-result-content" style="display:none;">
+                <div class="metrics-row" id="demo-metrics"></div>
+                <div class="analysis-flags" id="demo-flags"></div>
+                <pre id="demo-raw" style="margin-top:0.75rem; font-size:0.8rem;"></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="/js/demo.js"></script>
+</body>
+</html>

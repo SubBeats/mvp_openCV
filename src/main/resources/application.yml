@@ -1,0 +1,75 @@
+server:
+  port: 8090
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+app:
+  storage-path: ./storage
+
+  yolo:
+    enabled: true
+    model-path: /Users/bulat/IdeaProjects/mvp_openCV/runs/detect/runs/screenmon/train/weights/best.onnx
+    # Default threshold (fallback). For MVP we keep thresholds as in Roboflow screenshots (~58%).
+    conf-threshold: 0.58
+    imgsz: 512
+    # IMPORTANT: class ids must match your Roboflow class order.
+    # Example: if classes are [screen, glitches, dead-pixels-block], then screen=0, glitches=1, dead=2.
+    glitches-class-id: 0
+    screen-class-id: 1
+    dead-pixels-block-class-id: 2
+    # Per-class confidence thresholds (0..1). If not set (>0), conf-threshold is used.
+    glitches-conf-threshold: 0.58
+    screen-conf-threshold: 0.58
+    dead-pixels-block-conf-threshold: 0.58
+    # Устойчивость: флаг выставляется только если детекция на N кадрах подряд (1 = без проверки).
+    glitches-frames-persist: 3
+    dead-pixels-block-frames-persist: 1
+
+  # Детекция через Roboflow API (если веса скачать нельзя). При enabled и заданном url имеет приоритет над локальным YOLO.
+  roboflow:
+    enabled: true
+    inference-url: https://serverless.roboflow.com/find-screen-glitches/9
+    # api-key задаётся через переменную окружения APP_ROBOFLOW_API_KEY (Render: Environment) или application-local.yml
+    api-key: ${APP_ROBOFLOW_API_KEY:}
+    conf-threshold: 0.58
+    # Пороги по классам (0..1). Если не заданы — используется conf-threshold.
+    # conf-threshold-screen: 0.5
+    # conf-threshold-glitches: 0.6
+    # conf-threshold-dead-pixels-block: 0.55
+    glitches-class-name: glitch
+    screen-class-name: screen
+    dead-pixels-block-class-name: dead-pixels-block
+
+  cv:
+    black-mean-threshold: 10
+    black-var-threshold: 5
+    dim-brightness-threshold: 80
+    black-frames-in-row: 2
+    freeze-phash-threshold: 6
+    freeze-frames-match: 2
+    freeze-frames-window: 3
+    bands-deviation-threshold: 0.25
+    color-delta-e-threshold: 12
+
+spring:
+  datasource:
+    url: jdbc:h2:file:./data/screenmon;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB

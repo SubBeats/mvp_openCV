@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<!-- Страница «Загрузка кадра»: форма выбора экрана и файла, отправка POST /upload, отображение результата и боксов детекций на фото. -->
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Загрузка кадра — Screen Monitor</title>
+  <link rel="stylesheet" href="/css/screen-monitor.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sidebar-logo">Screen Monitor</div>
+      <nav class="sidebar-nav">
+        <a href="/">Статус сети</a>
+        <a href="/upload.html" class="active">Загрузка кадра</a>
+        <a href="/demo.html">Демо-анализ</a>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="/swagger-ui.html" target="_blank">API (Swagger)</a>
+      </div>
+    </aside>
+    <main class="main">
+      <h1 class="page-title">Загрузка кадра</h1>
+      <div class="card">
+        <div class="card-header">Загрузить снимок и запустить анализ</div>
+        <div class="card-body">
+          <form id="upload-form">
+            <div class="form-group">
+              <label for="upload-screen">Экран</label>
+              <select id="upload-screen" name="screen_id" required></select>
+            </div>
+            <div class="form-group">
+              <label>Файл изображения</label>
+              <div class="drop-zone" id="upload-drop">
+                <input type="file" id="upload-file" name="file" accept="image/*" required>
+                <span id="upload-drop-text">Перетащите файл сюда или нажмите для выбора</span>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary" id="upload-btn">Загрузить и проанализировать</button>
+          </form>
+          <div id="upload-loading" class="upload-loading" style="display:none;" aria-live="polite">
+            <span class="upload-loading-spinner" aria-hidden="true"></span>
+            <span class="upload-loading-text">Идёт анализ…</span>
+          </div>
+          <div id="upload-preview-wrap" style="display:none; margin-top:1rem;">
+            <p class="metric-label" style="margin-bottom:0.5rem;">Обнаруженные объекты на фото</p>
+            <div id="upload-preview" class="preview-area" style="position:relative; display:inline-block; max-width:100%;"></div>
+          </div>
+          <div id="upload-thresholds-wrap" class="card thresholds-card" style="display:none; margin-top:1rem;">
+            <div class="card-header threshold-card-header">
+              <span>Пороги отображения (%)</span>
+              <button type="button" class="btn btn-secondary btn-sm" id="threshold-reset-btn">По умолчанию</button>
+            </div>
+            <div class="card-body">
+              <div class="form-group threshold-row">
+                <label for="threshold-screen">Экран</label>
+                <div class="threshold-control">
+                  <input type="range" id="threshold-screen" class="threshold-slider" min="0" max="100" value="58" aria-label="Порог уверенности: Экран">
+                  <span id="threshold-screen-value" class="threshold-value">58</span>%
+                </div>
+              </div>
+              <div class="form-group threshold-row">
+                <label for="threshold-glitches">Глитчи</label>
+                <div class="threshold-control">
+                  <input type="range" id="threshold-glitches" class="threshold-slider" min="0" max="100" value="58" aria-label="Порог уверенности: Глитчи">
+                  <span id="threshold-glitches-value" class="threshold-value">58</span>%
+                </div>
+              </div>
+              <div class="form-group threshold-row">
+                <label for="threshold-dead-pixels">Битые блоки</label>
+                <div class="threshold-control">
+                  <input type="range" id="threshold-dead-pixels" class="threshold-slider" min="0" max="100" value="58" aria-label="Порог уверенности: Битые блоки">
+                  <span id="threshold-dead-pixels-value" class="threshold-value">58</span>%
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="upload-result" class="result-panel" style="display:none; margin-top:1rem;"></div>
+          <div id="upload-error" class="error-msg" style="display:none;"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="/js/upload-preview.js"></script>
+  <script src="/js/upload.js"></script>
+</body>
+</html>

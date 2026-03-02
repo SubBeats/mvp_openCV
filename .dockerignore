@@ -1,0 +1,12 @@
+target/
+.git/
+.idea/
+*.iml
+*.md
+docs/
+yolo/
+runs/
+storage/
+data/
+.env
+.env.local

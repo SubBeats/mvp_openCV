@@ -68,15 +68,14 @@ public class FrameAnalysisService {
             List<FrameAnalysis> previous = repository.findTop20ByScreenIdOrderByTsDesc(screenId);
             boolean isFreeze = checkFreeze(previous, phash);
 
-            YoloDetectionService.Detections yolo = roboflowDetection.isAvailable()
-                    ? roboflowDetection.detect(mat)
-                    : (yoloDetection.isAvailable() ? yoloDetection.detect(mat) : null);
+            YoloDetectionService.Detections yolo = roboflowDetection.detect(mat);
             List<DetectionBox> boxes = yolo != null ? yolo.getBoxes() : Collections.emptyList();
             boolean yoloScreen = yolo != null && yolo.isScreen();
             boolean yoloGlitchesRaw = yolo != null && yolo.isGlitches();
             boolean yoloDeadPixelsBlockRaw = yolo != null && yolo.isDeadPixelsBlock();
-            boolean yoloGlitches = applyConsecutivePersist(previous, yoloGlitchesRaw, yoloSettings.getGlitchesFramesPersist(), FrameAnalysis::getYoloGlitchesDetected);
             boolean yoloDeadPixelsBlock = applyConsecutivePersist(previous, yoloDeadPixelsBlockRaw, yoloSettings.getDeadPixelsBlockFramesPersist(), FrameAnalysis::getYoloDeadPixelsBlockDetected);
+            // Глитчи: по каждому кадру (если есть на кадре — сразу true), без требования N кадров подряд
+            boolean yoloGlitches = yoloGlitchesRaw;
 
             FrameAnalysis entity = new FrameAnalysis();
             entity.setScreenId(screenId);

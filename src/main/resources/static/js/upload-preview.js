@@ -1,154 +1,144 @@
 /**
- * Отрисовка боксов детекций поверх загруженного изображения.
- * Используется на странице «Загрузка кадра» после успешного ответа от /upload.
+ * Превью загруженного кадра и отрисовка боксов детекций.
+ * Классы детекции приходят с бэка в одном формате: screen, glitches, dead-pixels-block.
  */
-
 (function (window) {
   'use strict';
 
-  var BOX_COLORS = {
-    'screen': '#0066ff',
-    'glitches': '#ff6600',
-    'glitch': '#ff6600',
-    'dead-pixels-block': '#ff0000'
+  var DETECTION_CLASSES = {
+    'screen':            { color: '#00ffff', labelRu: 'Экран' },
+    'glitches':          { color: '#ff0000', labelRu: 'Глитчи' },
+    'dead-pixels-block': { color: '#ff0000', labelRu: 'Битые блоки' }
   };
-  var DEFAULT_COLOR = '#9933ff';
-  var LINE_WIDTH = 8;
-  var LABEL_FONT = '17px sans-serif';
+  var DEFAULT_COLOR = '#cc00ff';
+  var LINE_WIDTH = 4;
+  var LABEL_FONT = 'bold 18px sans-serif';
 
   var lastObjectUrl = null;
 
-  /**
-   * Показывает изображение из файла и рисует поверх него боксы.
-   * Клик по картинке открывает её в полном размере в новой вкладке.
-   */
+  function normalizeDetectionClass(apiClass) {
+    return (apiClass + '').toLowerCase().trim();
+  }
+
+  function getClassLabelRu(apiClass) {
+    var key = normalizeDetectionClass(apiClass);
+    var def = DETECTION_CLASSES[key];
+    return def ? def.labelRu : apiClass || '';
+  }
+
+  function getColorForClass(apiClass) {
+    var key = normalizeDetectionClass(apiClass);
+    var def = DETECTION_CLASSES[key];
+    return def ? def.color : DEFAULT_COLOR;
+  }
+
   function drawDetectionBoxes(container, file, boxes) {
     if (!container || !file) return;
-    boxes = boxes && boxes.length ? boxes : [];
+    boxes = Array.isArray(boxes) ? boxes : [];
 
-    if (lastObjectUrl) {
-      URL.revokeObjectURL(lastObjectUrl);
-      lastObjectUrl = null;
-    }
+    revokeLastObjectUrl();
     container.innerHTML = '';
+
     var objectUrl = URL.createObjectURL(file);
     lastObjectUrl = objectUrl;
 
     var wrap = document.createElement('div');
     wrap.style.position = 'relative';
     wrap.style.display = 'inline-block';
-    wrap.style.cursor = 'pointer';
-    wrap.title = 'Клик — открыть в полном размере';
-    wrap.addEventListener('click', function () {
-      if (lastObjectUrl) window.open(lastObjectUrl, '_blank', 'noopener,noreferrer');
-    });
 
     var img = document.createElement('img');
     img.style.display = 'block';
     img.style.maxWidth = '100%';
-    img.style.maxHeight = '70vh';
-    img.style.minHeight = '320px';
+    img.style.maxHeight = '85vh';
+    img.style.minHeight = '400px';
     img.style.objectFit = 'contain';
-    img.alt = 'Загруженный кадр (клик — открыть в полном размере)';
+    img.alt = 'Загруженный кадр';
 
     img.onload = function () {
       wrap.appendChild(img);
-
-      if (boxes.length > 0) {
-        var naturalWidth = img.naturalWidth;
-        var naturalHeight = img.naturalHeight;
-        var displayWidth = img.offsetWidth;
-        var displayHeight = img.offsetHeight;
-        var canvas = createOverlayCanvas(displayWidth, displayHeight);
-        var ctx = canvas.getContext('2d');
-        boxes.forEach(function (box) {
-          drawOneBox(ctx, box, naturalWidth, naturalHeight, displayWidth, displayHeight);
-        });
-        wrap.appendChild(canvas);
-      }
       container.appendChild(wrap);
-
-      var openBtn = document.createElement('button');
-      openBtn.type = 'button';
-      openBtn.className = 'btn btn-secondary';
-      openBtn.textContent = 'Открыть в полном размере';
-      openBtn.style.marginTop = '0.5rem';
-      openBtn.addEventListener('click', function () {
-        if (lastObjectUrl) window.open(lastObjectUrl, '_blank', 'noopener,noreferrer');
-      });
-      container.appendChild(openBtn);
+      if (boxes.length > 0) {
+        var imgEl = img;
+        var boxesCopy = boxes.slice();
+        requestAnimationFrame(function () {
+          var canvas = buildOverlayCanvas(imgEl, boxesCopy);
+          wrap.appendChild(canvas);
+        });
+      }
     };
 
     img.onerror = function () {
-      URL.revokeObjectURL(objectUrl);
+      revokeLastObjectUrl();
       lastObjectUrl = null;
     };
 
     img.src = objectUrl;
   }
 
-  /**
-   * Создаёт canvas поверх изображения (тот же размер, абсолютное позиционирование).
-   */
-  function createOverlayCanvas(width, height) {
-    var canvas = document.createElement('canvas');
-    canvas.width = width;
-    canvas.height = height;
-    canvas.style.position = 'absolute';
-    canvas.style.left = '0';
-    canvas.style.top = '0';
-    canvas.style.width = width + 'px';
-    canvas.style.height = height + 'px';
-    canvas.style.pointerEvents = 'none';
-    canvas.style.boxSizing = 'border-box';
-    return canvas;
-  }
-
-  /**
-   * Рисует один бокс и подпись (класс + уверенность в %).
-   * Координаты бокса приходят в пикселях исходного изображения — пересчитываем в размер превью.
-   */
-  function drawOneBox(ctx, box, natW, natH, dispW, dispH) {
-    var x = (box.x / natW) * dispW;
-    var y = (box.y / natH) * dispH;
-    var w = (box.width / natW) * dispW;
-    var h = (box.height / natH) * dispH;
-
-    var color = BOX_COLORS[box.class] || DEFAULT_COLOR;
-    var cls = (box.class || '').toLowerCase();
-
-    ctx.setLineDash([]);
-    ctx.lineWidth = LINE_WIDTH + 6;
-    ctx.strokeStyle = 'rgba(0,0,0,0.95)';
-    ctx.strokeRect(x, y, w, h);
-    ctx.lineWidth = LINE_WIDTH + 3;
-    ctx.strokeStyle = 'rgba(255,255,255,1)';
-    ctx.strokeRect(x, y, w, h);
-    ctx.lineWidth = LINE_WIDTH;
-    ctx.strokeStyle = color;
-    ctx.strokeRect(x, y, w, h);
-
-    var confidencePercent = box.confidence != null ? Math.round(box.confidence * 100) + '%' : '';
-    var label = (cls ? cls + ' ' : '') + (confidencePercent || '');
-    ctx.font = LABEL_FONT;
-    var textY = Math.max(20, y - 10);
-    ctx.fillStyle = 'rgba(0,0,0,0.9)';
-    ctx.fillText(label, x + 4, textY + 4);
-    ctx.fillStyle = '#fff';
-    ctx.fillText(label, x + 2, textY + 2);
-    ctx.fillStyle = color;
-    ctx.fillText(label, x, textY);
-  }
-
-  function revokePreviewUrl() {
+  function revokeLastObjectUrl() {
     if (lastObjectUrl) {
       URL.revokeObjectURL(lastObjectUrl);
       lastObjectUrl = null;
     }
   }
 
+  function buildOverlayCanvas(img, boxes) {
+    var w = img.offsetWidth;
+    var h = img.offsetHeight;
+    var nw = img.naturalWidth;
+    var nh = img.naturalHeight;
+    var canvas = document.createElement('canvas');
+    canvas.width = w;
+    canvas.height = h;
+    canvas.style.cssText = 'position:absolute;left:0;top:0;width:' + w + 'px;height:' + h + 'px;pointer-events:none;box-sizing:border-box;';
+    var ctx = canvas.getContext('2d');
+    boxes.forEach(function (box) {
+      drawBox(ctx, box, nw, nh, w, h);
+    });
+    return canvas;
+  }
+
+  function drawBox(ctx, box, natW, natH, dispW, dispH) {
+    var x = (box.x / natW) * dispW;
+    var y = (box.y / natH) * dispH;
+    var w = (box.width / natW) * dispW;
+    var h = (box.height / natH) * dispH;
+    var color = getColorForClass(box.class || box.classLabel);
+    var labelRu = getClassLabelRu(box.class || box.classLabel);
+    var pct = box.confidence != null ? Math.round(box.confidence * 100) + '%' : '';
+    var label = labelRu + (pct ? ' ' + pct : '');
+
+    ctx.setLineDash([]);
+    ctx.lineWidth = LINE_WIDTH + 2;
+    ctx.strokeStyle = 'rgba(0,0,0,0.7)';
+    ctx.strokeRect(x, y, w, h);
+    ctx.lineWidth = LINE_WIDTH;
+    ctx.strokeStyle = color;
+    ctx.strokeRect(x, y, w, h);
+
+    ctx.font = LABEL_FONT;
+    var textY = Math.max(28, y - 12);
+    var tw = ctx.measureText(label).width + 16;
+    var th = 28;
+    var tx = Math.max(0, x);
+    var ty = Math.max(th, textY - 18);
+    ctx.fillStyle = 'rgba(0,0,0,0.85)';
+    ctx.fillRect(tx, ty, tw, th);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.strokeRect(tx, ty, tw, th);
+    ctx.fillStyle = color;
+    ctx.fillText(label, tx + 8, ty + 20);
+  }
+
+  function revokePreviewUrl() {
+    revokeLastObjectUrl();
+  }
+
   window.UploadPreview = {
     drawDetectionBoxes: drawDetectionBoxes,
-    revokePreviewUrl: revokePreviewUrl
+    revokePreviewUrl: revokePreviewUrl,
+    normalizeDetectionClass: normalizeDetectionClass,
+    getClassLabelRu: getClassLabelRu
   };
 })(window);

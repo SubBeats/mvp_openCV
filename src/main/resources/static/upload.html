@@ -9,17 +9,7 @@
 </head>
 <body>
   <div class="app">
-    <aside class="sidebar">
-      <div class="sidebar-logo">Screen Monitor</div>
-      <nav class="sidebar-nav">
-        <a href="/">Статус сети</a>
-        <a href="/upload.html" class="active">Загрузка кадра</a>
-        <a href="/demo.html">Демо-анализ</a>
-      </nav>
-      <div class="sidebar-footer">
-        <a href="/swagger-ui.html" target="_blank">API (Swagger)</a>
-      </div>
-    </aside>
+    <aside class="sidebar" data-active="upload.html"></aside>
     <main class="main">
       <h1 class="page-title">Загрузка кадра</h1>
       <div class="card">
@@ -82,6 +72,7 @@
       </div>
     </main>
   </div>
+  <script src="/js/sidebar.js"></script>
   <script src="/js/upload-preview.js"></script>
   <script src="/js/upload.js"></script>
 </body>

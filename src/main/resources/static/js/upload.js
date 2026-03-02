@@ -48,7 +48,7 @@
   var lastFile = null;
   var lastBoxes = null;
 
-  var DEFAULT_THRESHOLDS_PERCENT = { screen: 80, glitches: 58, 'dead-pixels-block': 56 };
+  var DEFAULT_THRESHOLDS_PERCENT = { screen: 80, glitches: 58, 'dead-pixels-block': 53 };
 
   function setThresholdSlidersToDefault() {
     var screenSlider = document.getElementById('threshold-screen');
@@ -79,6 +79,7 @@
     if (previewWrap) previewWrap.style.display = 'none';
     if (previewEl) previewEl.innerHTML = '';
     if (thresholdsWrap) thresholdsWrap.style.display = 'none';
+    if (window.UploadPreview && window.UploadPreview.revokePreviewUrl) window.UploadPreview.revokePreviewUrl();
     lastFile = null;
     lastBoxes = null;
   }

@@ -70,6 +70,7 @@ public class UploadController {
                 a.put("dim", Boolean.TRUE.equals(last.getIsDim()));
                 a.put("freeze", Boolean.TRUE.equals(last.getIsFreeze()));
                 a.put("yoloGlitches", Boolean.TRUE.equals(last.getYoloGlitchesDetected()));
+                a.put("glitchOnLastFrame", Boolean.TRUE.equals(last.getYoloGlitchesRaw()));
                 a.put("yoloScreen", Boolean.TRUE.equals(last.getYoloScreenDetected()));
                 a.put("yoloDeadPixelsBlock", Boolean.TRUE.equals(last.getYoloDeadPixelsBlockDetected()));
                 m.put("analysis", a);
@@ -154,9 +155,12 @@ public class UploadController {
             a.put("black", r.getAnalysis().isBlack());
             a.put("dim", r.getAnalysis().isDim());
             a.put("freeze", r.getAnalysis().isFreeze());
-            a.put("yoloGlitches", r.getAnalysis().isYoloGlitches());
-            a.put("yoloScreen", r.getAnalysis().isYoloScreen());
-            a.put("yoloDeadPixelsBlock", r.getAnalysis().isYoloDeadPixelsBlock());
+            boolean fromBoxesGlitches = hasClassInBoxes(r.getBoxes(), "glitches", "glitch");
+            boolean fromBoxesScreen = hasClassInBoxes(r.getBoxes(), "screen");
+            boolean fromBoxesDead = hasClassInBoxes(r.getBoxes(), "dead-pixels-block");
+            a.put("yoloGlitches", fromBoxesGlitches || r.getAnalysis().isYoloGlitches());
+            a.put("yoloScreen", fromBoxesScreen || r.getAnalysis().isYoloScreen());
+            a.put("yoloDeadPixelsBlock", fromBoxesDead || r.getAnalysis().isYoloDeadPixelsBlock());
             m.put("analysis", a);
         }
         if (r.getBoxes() != null && !r.getBoxes().isEmpty()) {
@@ -174,6 +178,18 @@ public class UploadController {
             m.put("boxes", boxList);
         }
         return m;
+    }
+
+    private static boolean hasClassInBoxes(List<DetectionBox> boxes, String... classNames) {
+        if (boxes == null || boxes.isEmpty()) return false;
+        for (DetectionBox b : boxes) {
+            String cls = b.getClassLabel();
+            if (cls == null) continue;
+            for (String name : classNames) {
+                if (name != null && name.equalsIgnoreCase(cls)) return true;
+            }
+        }
+        return false;
     }
 
     private static Map<String, String> error(String message) {

@@ -37,7 +37,7 @@ public class RoboflowSettings {
     /** Порог уверенности для класса «глитчи» (0..1). Если не задан — используется confThreshold. */
     private Double confThresholdGlitches = 0.58;
     /** Порог уверенности для класса «битый блок» (0..1). Если не задан — используется confThreshold. */
-    private Double confThresholdDeadPixelsBlock = 0.56;
+    private Double confThresholdDeadPixelsBlock = 0.53;
 
     /** Имя класса «глитчи» в ответе API (например glitch). */
     private String glitchesClassName = "glitch";

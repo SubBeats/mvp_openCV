@@ -12,7 +12,7 @@
     if (analysis.freeze) defects.push({ text: 'фриз', css: 'badge-defect' });
     if (analysis.yoloGlitches) defects.push({ text: 'глитчи', css: 'badge-defect' });
     if (analysis.yoloDeadPixelsBlock) defects.push({ text: 'битые блоки', css: 'badge-defect' });
-    if (analysis.dim) defects.push({ text: 'тускло', css: 'badge-defect' });
+    if (analysis.dim) defects.push({ text: 'пониженная яркость', css: 'badge-defect' });
     if (defects.length === 0) return '<span class="badge badge-ok">OK</span>';
     return defects.map(function (d) { return '<span class="badge ' + d.css + '">' + d.text + '</span>'; }).join('');
   }

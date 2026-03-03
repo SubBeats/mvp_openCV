@@ -34,8 +34,8 @@ app:
   roboflow:
     enabled: true
     inference-url: https://serverless.roboflow.com/find-screen-glitches/9
-    # api-key задаётся через переменную окружения APP_ROBOFLOW_API_KEY (Render: Environment) или application-local.yml
-    api-key: ${APP_ROBOFLOW_API_KEY:}
+    # api-key: по умолчанию для локального/докер запуска. Для прода — задайте APP_ROBOFLOW_API_KEY.
+    api-key: ${APP_ROBOFLOW_API_KEY:w0QjiBxG4QcegmBbyKfZ}
     conf-threshold: 0.58
     # Пороги по классам (0..1). Если не заданы — используется conf-threshold.
     # conf-threshold-screen: 0.5

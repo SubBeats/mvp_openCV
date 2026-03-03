@@ -11,24 +11,13 @@
   var THRESHOLD_IDS = ['threshold-screen', 'threshold-glitches', 'threshold-dead-pixels'];
   var DEFAULT_THRESHOLDS_PERCENT = { screen: 80, glitches: 58, 'dead-pixels-block': 53 };
 
-  /** Ключи анализа, которые не показывать (временно). */
-  var IGNORE_ANALYSIS_KEYS = { black: true };
-
-  /** Порядок вывода: сначала главное (экран, глитчи, битые блоки), затем остальное. */
-  var ANALYSIS_ORDER = [
-    'yoloScreen',
-    'yoloGlitches',
-    'yoloDeadPixelsBlock',
-    'freeze',
-    'dim'
-  ];
-
   var ANALYSIS_LABELS_RU = {
-    yoloScreen: 'Экран (YOLO)',
+    freeze: 'Заморозка',
     yoloGlitches: 'Глитчи (YOLO)',
+    black: 'Чёрный экран',
+    dim: 'Тускло',
     yoloDeadPixelsBlock: 'Битые блоки (YOLO)',
-    freeze: 'Застывший экран',
-    dim: 'Пониженная яркость'
+    yoloScreen: 'Экран (YOLO)'
   };
 
   function getEl(id) { return document.getElementById(id); }
@@ -179,22 +168,12 @@
     html += '<h4 class="result-ru-subtitle">Анализ</h4>';
     if (data.analysis && typeof data.analysis === 'object') {
       html += '<ul class="result-ru-list">';
-      var seen = {};
-      for (var i = 0; i < ANALYSIS_ORDER.length; i++) {
-        var key = ANALYSIS_ORDER[i];
-        if (IGNORE_ANALYSIS_KEYS[key]) continue;
+      for (var key in data.analysis) {
         if (Object.prototype.hasOwnProperty.call(data.analysis, key)) {
-          seen[key] = true;
           var label = ANALYSIS_LABELS_RU[key] || key;
           var val = data.analysis[key];
           html += '<li><strong>' + escapeHtml(label) + ':</strong> ' + (val ? 'да' : 'нет') + '</li>';
         }
-      }
-      for (var otherKey in data.analysis) {
-        if (IGNORE_ANALYSIS_KEYS[otherKey] || !Object.prototype.hasOwnProperty.call(data.analysis, otherKey) || seen[otherKey]) continue;
-        var otherLabel = ANALYSIS_LABELS_RU[otherKey] || otherKey;
-        var otherVal = data.analysis[otherKey];
-        html += '<li><strong>' + escapeHtml(otherLabel) + ':</strong> ' + (otherVal ? 'да' : 'нет') + '</li>';
       }
       html += '</ul>';
     } else {

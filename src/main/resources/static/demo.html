@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Страница «Демо-анализ»: загрузка одного изображения, отправка POST /api/demo/analyze, отображение яркости/дисперсии и флага «чёрный экран». Без сохранения в БД. -->
+<!-- Страница «Демо-анализ»: загрузка одного изображения, отправка POST /api/demo/analyze, отображение яркости и дисперсии. Без сохранения в БД. -->
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
@@ -10,26 +10,22 @@
 <body>
   <div class="app">
     <aside class="sidebar">
-      <a href="/" class="sidebar-brand" aria-label="На главную">
-        <img src="./images/logo.png" alt="" class="sidebar-brand-logo" width="32" height="32">
-        <span class="sidebar-brand-text">
-          <span class="sidebar-brand-title">РИМ Монитор</span>
-          <span class="sidebar-brand-tagline">автоматическое выявление дефектов цифровых экранов</span>
-          <span class="sidebar-brand-platform">на базе платформы «Нейротек»</span>
-        </span>
+      <a href="/" class="sidebar-logo" aria-label="На главную">
+        <img src="./images/logo.jpg" alt="РИМ Монитор" class="sidebar-logo-img" width="112" height="112">
       </a>
       <nav class="sidebar-nav">
         <a href="/">Статус сети</a>
         <a href="/upload.html">Загрузка кадра</a>
         <a href="/demo.html" class="active">Демо-анализ</a>
+        <a href="/swagger-ui.html" target="_blank">API (Swagger)</a>
       </nav>
       <div class="sidebar-footer">
-        <a href="/swagger-ui.html" target="_blank">API (Swagger)</a>
+        <span class="sidebar-footer-text">На базе платформы «Нейротек»</span>
       </div>
     </aside>
     <main class="main">
       <h1 class="page-title">Демо-анализ</h1>
-      <p class="metric-label" style="margin-bottom:1rem;">Проверка без сохранения: только яркость и чёрный экран (OpenCV). Без нейросети и без записи в БД. Для полного анализа с детекцией глитчей и боксами используйте <a href="/upload.html">Загрузка кадра</a>.</p>
+      <p class="metric-label" style="margin-bottom:1rem;">Проверка без сохранения: только яркость и дисперсия (OpenCV). Без нейросети и без записи в БД. Для полного анализа с детекцией глитчей и боксами используйте <a href="/upload.html">Загрузка кадра</a>.</p>
       <div class="two-col">
         <div class="card">
           <div class="card-header">Загрузить изображение</div>

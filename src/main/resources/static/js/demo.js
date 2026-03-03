@@ -1,6 +1,6 @@
 /**
  * Страница «Демо-анализ» (demo.html).
- * Выбор файла (drag-n-drop), отправка POST /api/demo/analyze, отображение meanY, var, isBlack и сырого JSON.
+ * Выбор файла (drag-n-drop), отправка POST /api/demo/analyze, отображение meanY, var и сырого JSON.
  */
 (function () {
   'use strict';
@@ -52,15 +52,15 @@
     document.getElementById('demo-metrics').innerHTML = metricsHtml;
 
     var flagsHtml = '';
-    if (data.isBlack != null) {
-      var css = data.isBlack ? 'badge-defect' : 'badge-ok';
-      flagsHtml += '<span class="badge ' + css + '">Чёрный экран: ' + (data.isBlack ? 'да' : 'нет') + '</span>';
-    }
     if (data.error) {
       flagsHtml += '<span class="badge badge-defect">' + data.error + '</span>';
     }
     document.getElementById('demo-flags').innerHTML = flagsHtml;
-    document.getElementById('demo-raw').textContent = JSON.stringify(data, null, 2);
+    var rawCopy = {};
+    for (var k in data) {
+      if (k !== 'isBlack' && k !== 'black') rawCopy[k] = data[k];
+    }
+    document.getElementById('demo-raw').textContent = JSON.stringify(rawCopy, null, 2);
   }
 
   document.getElementById('demo-analyze-btn').addEventListener('click', function () {

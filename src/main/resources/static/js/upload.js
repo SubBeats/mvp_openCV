@@ -14,7 +14,6 @@
   var ANALYSIS_LABELS_RU = {
     freeze: 'Заморозка',
     yoloGlitches: 'Глитчи (YOLO)',
-    black: 'Чёрный экран',
     dim: 'Тускло',
     yoloDeadPixelsBlock: 'Битые блоки (YOLO)',
     yoloScreen: 'Экран (YOLO)'
@@ -169,11 +168,14 @@
     if (data.analysis && typeof data.analysis === 'object') {
       html += '<ul class="result-ru-list">';
       for (var key in data.analysis) {
-        if (Object.prototype.hasOwnProperty.call(data.analysis, key)) {
-          var label = ANALYSIS_LABELS_RU[key] || key;
-          var val = data.analysis[key];
-          html += '<li><strong>' + escapeHtml(label) + ':</strong> ' + (val ? 'да' : 'нет') + '</li>';
-        }
+        if (!Object.prototype.hasOwnProperty.call(data.analysis, key)) continue;
+        var keyLower = (key + '').toLowerCase();
+        if (keyLower === 'black') continue;
+        var label = ANALYSIS_LABELS_RU[key] || key;
+        var labelStr = (label + '').toLowerCase();
+        if (labelStr.indexOf('черн') !== -1) continue;
+        var val = data.analysis[key];
+        html += '<li><strong>' + escapeHtml(label) + ':</strong> ' + (val ? 'да' : 'нет') + '</li>';
       }
       html += '</ul>';
     } else {

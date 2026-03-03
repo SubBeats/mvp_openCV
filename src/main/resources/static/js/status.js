@@ -8,7 +8,6 @@
   function formatStatusBadges(analysis) {
     if (!analysis) return '<span class="badge badge-none">нет данных</span>';
     var defects = [];
-    if (analysis.black) defects.push({ text: 'чёрный', css: 'badge-defect' });
     if (analysis.freeze) defects.push({ text: 'фриз', css: 'badge-defect' });
     if (analysis.yoloGlitches) defects.push({ text: 'глитчи', css: 'badge-defect' });
     if (analysis.yoloDeadPixelsBlock) defects.push({ text: 'битые блоки', css: 'badge-defect' });

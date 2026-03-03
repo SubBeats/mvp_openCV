@@ -58,62 +58,37 @@ body {
   flex-direction: column;
 }
 
-/* Лого и заголовок — кликабельный блок, ведёт на главную */
-.sidebar-brand {
+.sidebar-logo {
   display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  padding: 1.25rem 1.5rem 1.25rem;
-  margin-bottom: 0.75rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1.25rem 1rem;
+  margin-bottom: 0.5rem;
   text-decoration: none;
   color: var(--primary);
   border-bottom: 1px solid var(--border);
 }
 
-.sidebar-brand:hover {
+.sidebar-logo:hover {
   color: var(--primary-hover);
 }
 
-.sidebar-brand:hover .sidebar-brand-tagline,
-.sidebar-brand:hover .sidebar-brand-platform {
-  color: var(--text-muted);
-}
-
-.sidebar-brand-logo {
+.sidebar-logo-img {
   display: block;
-  width: 32px;
-  height: 32px;
-  margin-right: 0.25rem;
+  width: 112px !important;
+  height: 112px !important;
+  max-width: 112px !important;
+  max-height: 112px !important;
   object-fit: contain;
   flex-shrink: 0;
 }
 
-.sidebar-brand-text {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  min-width: 0;
-}
-
-.sidebar-brand-title {
-  font-weight: 700;
-  font-size: 1rem;
-  line-height: 1.25;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.sidebar-brand-tagline,
-.sidebar-brand-platform {
-  font-size: 0.7rem;
-  font-weight: 400;
-  line-height: 1.3;
-  color: var(--text-muted);
-}
-
-.sidebar-brand-platform {
-  font-size: 0.65rem;
+.sidebar-logo-name {
+  font-weight: 600;
+  font-size: 0.6875rem;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
 }
 
 /* Навигация */
@@ -145,20 +120,19 @@ body {
   font-weight: 500;
 }
 
+/* Футер сайдбара — только текст */
 .sidebar-footer {
   margin-top: auto;
   padding: 1rem 1.25rem 0;
-  border-top: 1px solid var(--border);
 }
 
-.sidebar-footer a {
-  font-size: 0.8rem;
+.sidebar-footer-text {
+  display: block;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.65rem;
+  line-height: 1.3;
   color: var(--text-muted);
-  text-decoration: none;
-}
-
-.sidebar-footer a:hover {
-  color: var(--primary);
 }
 
 /* ==========================================================================

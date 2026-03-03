@@ -9,7 +9,24 @@
 </head>
 <body>
   <div class="app">
-    <aside class="sidebar" data-active=""></aside>
+    <aside class="sidebar">
+      <a href="/" class="sidebar-brand" aria-label="На главную">
+        <img src="/images/logo.png" alt="" class="sidebar-brand-logo" width="32" height="32">
+        <span class="sidebar-brand-text">
+          <span class="sidebar-brand-title">РИМ Монитор</span>
+          <span class="sidebar-brand-tagline">автоматическое выявление дефектов цифровых экранов</span>
+          <span class="sidebar-brand-platform">на базе платформы «Нейротек»</span>
+        </span>
+      </a>
+      <nav class="sidebar-nav">
+        <a href="/" class="active">Статус сети</a>
+        <a href="/upload.html">Загрузка кадра</a>
+        <a href="/demo.html">Демо-анализ</a>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="/swagger-ui.html" target="_blank">API (Swagger)</a>
+      </div>
+    </aside>
     <main class="main">
       <h1 class="page-title">Статус сети</h1>
       <div class="card">
@@ -31,7 +48,6 @@
       </div>
     </main>
   </div>
-  <script src="/js/sidebar.js"></script>
   <script src="/js/status.js"></script>
 </body>
 </html>

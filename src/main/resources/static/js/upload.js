@@ -13,10 +13,10 @@
 
   var ANALYSIS_LABELS_RU = {
     freeze: 'Заморозка',
-    yoloGlitches: 'Глитчи (YOLO)',
+    yoloGlitches: 'Глитчи (Нейротек)',
     dim: 'Тускло',
-    yoloDeadPixelsBlock: 'Битые блоки (YOLO)',
-    yoloScreen: 'Экран (YOLO)'
+    yoloDeadPixelsBlock: 'Битые блоки (Нейротек)',
+    yoloScreen: 'Экран (Нейротек)'
   };
 
   function getEl(id) { return document.getElementById(id); }

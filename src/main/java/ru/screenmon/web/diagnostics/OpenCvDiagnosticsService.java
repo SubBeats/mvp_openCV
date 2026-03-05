@@ -32,7 +32,7 @@ public class OpenCvDiagnosticsService {
         if (mat == null || mat.empty()) {
             Map<String, Object> err = new HashMap<>();
             err.put("ok", false);
-            err.put("error", "OpenCV could not load image");
+            err.put("error", "Could not load image");
             return err;
         }
         Mat gray = new Mat();
@@ -53,7 +53,7 @@ public class OpenCvDiagnosticsService {
             out.put("std", Math.round(std * 100) / 100.0);
             out.put("var", Math.round(var * 100) / 100.0);
             out.put("isBlack", isBlack);
-            out.put("openCvUsed", true);
+            out.put("cvUsed", true);
             return out;
         } finally {
             mat.release();
@@ -64,7 +64,7 @@ public class OpenCvDiagnosticsService {
     public Map<String, Object> analyzeSampleFrame() {
         Mat mat = new Mat(100, 100, org.opencv.core.CvType.CV_8UC3, new Scalar(0, 0, 0));
         try {
-            Path temp = Files.createTempFile("opencv_sample_", ".jpg");
+            Path temp = Files.createTempFile("cv_sample_", ".jpg");
             try {
                 Imgcodecs.imwrite(temp.toString(), mat);
                 return analyzeImage(temp);

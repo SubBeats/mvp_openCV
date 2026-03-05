@@ -15,12 +15,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Диагностические эндпоинты для проверки OpenCV и просмотра текущих порогов CV.
+ * Диагностические эндпоинты для проверки библиотеки обработки изображений и просмотра текущих порогов CV.
  *
  * <p><b>Эндпоинты (префикс /api/demo):</b></p>
  * <ul>
  *   <li>GET /cv-settings — параметры app.cv.* (чёрный экран, фриз; битые блоки только в YOLO).</li>
- *   <li>GET /opencv — статус загрузки OpenCV.</li>
+ *   <li>GET /cv — статус загрузки библиотеки обработки изображений.</li>
  *   <li>GET /analyze-sample — разбор тестового чёрного кадра.</li>
  *   <li>POST /analyze — разбор загруженного файла (file); в ответе meanY, var, isBlack.</li>
  * </ul>
@@ -62,11 +62,11 @@ public class OpenCvDiagnosticsController {
         return out;
     }
 
-    @GetMapping("/opencv")
-    public Map<String, Object> opencvStatus() {
+    @GetMapping("/cv")
+    public Map<String, Object> cvStatus() {
         Map<String, Object> out = new HashMap<>();
-        out.put("openCvLoaded", true);
-        out.put("message", "OpenCV ready. GET /api/demo/analyze-sample or POST /api/demo/analyze with file.");
+        out.put("cvLoaded", true);
+        out.put("message", "Image library ready. GET /api/demo/analyze-sample or POST /api/demo/analyze with file.");
         return out;
     }
 
@@ -84,7 +84,7 @@ public class OpenCvDiagnosticsController {
             return ResponseEntity.badRequest().body(err);
         }
         try {
-            Path temp = Files.createTempFile("opencv_analyze_", ".jpg");
+            Path temp = Files.createTempFile("cv_analyze_", ".jpg");
             try {
                 file.transferTo(temp.toFile());
                 return ResponseEntity.ok(diagnostics.analyzeImage(temp));

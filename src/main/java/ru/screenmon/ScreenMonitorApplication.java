@@ -10,7 +10,7 @@ import javax.annotation.PostConstruct;
 public class ScreenMonitorApplication {
 
     @PostConstruct
-    public void loadOpenCV() {
+    public void loadImageLib() {
         if (getJavaVersion() >= 12) {
             OpenCV.loadLocally();
         } else {
